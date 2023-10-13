@@ -19,7 +19,7 @@ from .models import User, Auction, Bid, Comment
 # Create your views here.
 def login(request):
 
-    return render(request, "users/auth.html", {
+    return render(request, "auctions/login.html", {
             "page": "Login"
         })
 
@@ -33,12 +33,12 @@ def login(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("auth:login"))
+    return HttpResponseRedirect(reverse("auctions:login"))
 
 
 def register(request):
 
-    return render(request, "users/auth.html", {
+    return render(request, "auctions/register.html", {
             "page": "Register"
         })
 
@@ -89,59 +89,12 @@ def index(request):
         "listings": items
     })
 
-
-def login_view(request):
-    if request.method == "POST":
-
-        # Attempt to sign user in
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-
-        # Check if authentication successful
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse("auctions:index"))
-        else:
-            return render(request, "auctions/login.html", {
-                "message": "Invalid username and/or password."
-            })
-    else:
-        return render(request, "auctions/login.html")
-
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("auctions:index"))
 
 
-def register(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
-        first_name = request.POST["first_name"]
-        last_name = request.POST["last_name"]
 
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        if password != confirmation:
-            return render(request, "auctions/register.html", {
-                "message": "Passwords must match."
-            })
-
-        # Attempt to create new user
-        try:
-            user = User.objects.create_user(username, email, password, last_name=last_name, first_name=first_name)
-            user.save()
-        except IntegrityError:
-            return render(request, "auctions/register.html", {
-                "message": "Username already taken."
-            })
-        login(request, user)
-        return HttpResponseRedirect(reverse("auctions:index"))
-    else:
-        return render(request, "auctions/register.html")
 
 @login_required
 def create_listing(request):

@@ -25,5 +25,5 @@ router.registry.extend(api_router.registry)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("auctions.urls")),
-    path("api", include("api.urls")),
+    path("api/", include("api.urls")),
 ]

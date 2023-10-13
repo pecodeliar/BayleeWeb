@@ -8,17 +8,17 @@
         {% if message %}
             <p class="alert alert-danger" role="alert">{{ message }}</p>
         {% endif %}
-        <form action="#" method="post">
+        <form onsubmit="event.preventDefault();" method="post">
             {% csrf_token %}
             <div class="form-group log-reg-item">
-                <input autofocus class="form-control shadow-none log-reg-inp" type="text" name="username" placeholder="Username">
+                <input autofocus class="form-control shadow-none log-reg-inp" type="text" name="username" id="username" placeholder="Username">
             </div>
             <div class="form-group log-reg-item">
-                <input class="form-control shadow-none log-reg-inp" type="password" name="password" placeholder="Password">
+                <input class="form-control shadow-none log-reg-inp" type="password" name="password" id="password" placeholder="Password">
             </div>
-            <input class="btn btn-primary log-reg-btn float-right" type="submit" value="Login">
+            <input class="btn btn-primary log-reg-btn float-right" type="submit" onclick="authentication(this.value)" value="Login" id="login-btn">
         </form>
-        <p class="log-reg-link">Don't have an account? <a href="#">Register here.</a></p>
+        <p class="log-reg-link">Don't have an account? <a href="/register">Register here.</a></p>
     </div>
 
 
