@@ -1,5 +1,6 @@
-from auctions.models import User
+from auctions.models import User, Auction
 from api.serializers.users import UserSerializer, RegisterSerializer, LoginSerializer
+from api.serializers.listings import AuctionSerializer
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.decorators import api_view
@@ -9,6 +10,7 @@ from rest_framework import viewsets
 from knox.models import AuthToken
 from api.permissions import IsOwner, IsSuperUser
 from django.contrib.auth import login
+from rest_framework.decorators import action
 
 
 
@@ -19,29 +21,52 @@ def api_root(request, format=None):
         'users': reverse('user-list', request=request, format=format),
     })
 
+class UserPermission(permissions.BasePermission):
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    def has_permission(self, request, view):
+        if view.action in ['list', 'retrieve']:
+            return True
+        elif view.action in ['create', 'update', 'partial_update', 'destroy']:
+            return request.user and request.user.is_authenticated
+        else:
+            return False
+
+    def has_object_permission(self, request, view, obj):
+        if view.action == 'retrieve':
+            return True
+        elif view.action in ['create', 'update', 'partial_update', 'destroy']:
+            return obj == request.user or request.user.is_staff
+        else:
+            return False
+
+
+class UserViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list` and `retrieve` actions Allow user to retreive their own data if authenticated but otherwise must be admin.
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [UserPermission]
 
-    # https://stackoverflow.com/questions/44533277/django-rest-framework-restrict-user-data-view-to-admins-the-very-own-user
-    def get_permissions(self):
-        if self.action == 'list':
-            self.permission_classes = [IsSuperUser, ]
-        elif self.action == 'retrieve':
-            self.permission_classes = [IsOwner]
-        return super(self.__class__, self).get_permissions()
+    @action(detail=False, methods=['GET'], url_path='(?P<user_id>\d+)/listings', permission_classes=[permissions.AllowAny])
+    def listings(self, request, user_id, *args, **kwargs):
+        """This for getting all the listings of a particular user."""
 
+        users = self.get_queryset()
+        user = users.get(pk=user_id)
+        posts = Auction.objects.filter(creator=user).order_by("-creation_date").all()
+        results = AuctionSerializer(posts, many=True).data
+        return Response(results)
+    
+    """@action(detail=False, methods=['GET'], url_path='(?P<user_id>\d+)/comments', permission_classes=[permissions.AllowAny])
+    def comments(self, request, user_id, *args, **kwargs):
+        # This for getting all the comments made by a user
 
-class UserUpdateView(generics.UpdateAPIView):
-    """
-    This viewset will only allow the update of user email, theme and deactivation.
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+        users = self.get_queryset()
+        user = users.get(pk=user_id)
+        comments = Comment.objects.filter(creator=user).order_by("-creation_date").all()
+        results = CommentSerializer(comments, many=True).data
+        return Response(results)"""
 
 
 class RegisterView(generics.CreateAPIView):

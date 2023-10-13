@@ -235,7 +235,10 @@ function watch(action, listingId) {
             action: action
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.ok) return response.json();
+        return response.json().then(response => {throw new Error(response.error)})
+    })
     .then(() => {
 
         const button = document.getElementById("list-wl-btn");
@@ -253,4 +256,50 @@ function watch(action, listingId) {
         toast("Error. Reason stickied above.", error);
     });
 
+}
+
+function editProfile(userId) {
+
+    const firstName = document.getElementById("id_first_name").value;
+    const lastName = document.getElementById("id_last_name").value;
+    const username = document.getElementById("id_username").value;
+    const pfp = document.getElementById("id_profile_picture").value;
+    const pfpCredit = document.getElementById("id_pfp_credit").value;
+    const banner = document.getElementById("id_banner").value;
+    const bannerCredit = document.getElementById("id_banner_credit").value;
+
+
+    const csrftoken = getCookie('csrftoken');
+
+    fetch(`/api/users/${userId}/`, {
+        method: 'PATCH',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            username: username,
+            profile_picture: pfp,
+            pfp_credit: pfpCredit,
+            banner: banner,
+            banner_credit: bannerCredit,
+        })
+    })
+    .then(response => {
+        if (response.ok) return response.json();
+        return response.json().then(response => {throw new Error(response.error)})
+    })
+    .then(result => {
+
+        console.log(result);
+        window.location.href = `/profile/${userId}`;
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
+    
 }

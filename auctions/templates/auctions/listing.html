@@ -57,10 +57,14 @@
         {% if bid_apology == True %}<p class="alert alert-danger" role="alert">Your bid needs to be higher than the current price.</p>{% endif %}
         <div class="details">
             <div class="det-creator-cont">
-                <a href="#">
+                <a href="{% url 'auctions:profile' listing.creator.id %}">
+                    {% if listing.creator.profile_picture %}
                     <img class="det-creator-img" src="{{ listing.creator.profile_picture }}" alt="Profile Picture">
+                    {% else %}
+                    <img class="det-creator-img" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
+                    {% endif %}
                 </a>
-                <p class="card-text details-creator">Listed by: <a href="#">{{ listing.creator }}</a></p>
+                <p class="card-text details-creator">Listed by: <a href="{% url 'auctions:profile' listing.creator.id %}">{{ listing.creator }}</a></p>
             </div>
             <!--{% if listing.category_id == null %}
                 <p class="details-category">Category: No Category Listed</p>
@@ -93,7 +97,11 @@
                 {% if user.is_authenticated %}
                 <div class="cmnt-card-img-w-text-box">
                     <div class="logged-comment-pfp">
+                        {% if account.profile_picture %}
                         <img class="comment-pfp" src="{{ user.profile_picture }}" alt="Profile Picture">
+                        {% else %}
+                        <img class="comment-pfp" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
+                        {% endif %}
                     </div>
                     <form method="POST" class="comment-submit">
                     {% csrf_token %}
@@ -108,12 +116,16 @@
             {% for comment in comments reversed %}
                 <div class="comment-item">
                     <div class="users-comment-pfp">
-                        <a href="{% url 'auctions:account' comment.user.id %}">
-                            <img class="comment-pfp" src="{{ comment.user.profile_picture }}" alt="Profile Picture">
+                        <a href="{% url 'auctions:profile' comment.creator.id %}">
+                            {% if account.profile_picture %}
+                            <img class="comment-pfp" src="{{ listing.creator.profile_picture }}" alt="Profile Picture">
+                            {% else %}
+                            <img class="comment-pfp" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
+                            {% endif %}
                         </a>
                     </div>
                     <div class="comment-details">
-                        <p class="" id="user-cmnt-name"><a href="{% url 'auctions:account' comment.user.id %}">{{ comment.user.username }}</a></p>
+                        <p class="" id="user-cmnt-name"><a href="{% url 'auctions:account' comment.creator.id %}">{{ comment.user.username }}</a></p>
                         <p class="" id="user-cmnt-text">{{ comment.text }}</p>
                     </div>
                 </div>

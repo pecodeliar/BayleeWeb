@@ -223,43 +223,6 @@ def manage(request):
             theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
             return HttpResponseRedirect(reverse("auctions:manage"))
 
-        first_name = request.POST["first_name"]
-        last_name = request.POST["last_name"]
-        username = request.POST["username"]
-        email = request.POST["email"]
-        profile_picture = request.POST["profile_picture"]
-        pfp_credit = request.POST["pfp_credit"]
-        banner = request.POST["banner"]
-        banner_credit = request.POST["banner_credit"]
-
-        try:
-            user.first_name = first_name
-            user.last_name = last_name
-            user.username = username
-            user.email = email
-            user.profile_picture = profile_picture
-            user.pfp_credit = pfp_credit
-            user.banner = banner
-            user.banner_credit = banner_credit
-            user.save()
-        except IntegrityError:
-            default_data = {
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'username': user.username,
-                'email': user.email,
-                'profile_picture': user.profile_picture,
-                'pfp_credit': user.pfp_credit,
-                'banner': user.banner,
-                'banner_credit': user.banner_credit
-            }
-            return render(request, "auctions/manage.html", {
-                "message": "Username already taken.",
-                "form_fields": list(ManageAccountForm(default_data))
-            })
-
-        return HttpResponseRedirect(reverse("auctions:account", args=(user.id,)))
-
     else:
         default_data = {
             'first_name': user.first_name,
@@ -281,7 +244,7 @@ def account(request, user_id):
     account = User.objects.get(pk=user_id)
 
     # Find if user has made any comments
-    comments = Comment.objects.filter(user=account)
+    comments = Comment.objects.filter(creator=account)
 
     # Find if user has made any auctions
     auctions = Auction.objects.filter(creator_id=account)
@@ -290,9 +253,9 @@ def account(request, user_id):
         # User is switch themes
         if "theme_button" in request.POST.keys():
             theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
-            return HttpResponseRedirect(reverse("auctions:account", args=(account.id,)))
+            return HttpResponseRedirect(reverse("auctions:profile", args=(account.id,)))
     else:
-        return render(request, "auctions/account.html", {
+        return render(request, "auctions/profile.html", {
                     "account": account,
                     "comments": comments,
                     "listings": auctions

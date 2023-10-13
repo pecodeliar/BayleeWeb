@@ -3,16 +3,28 @@
 {% block body %}
 
 <div class="banner-row">
-    <img src="#" alt="Profile Banner" id="banner">
+    {% if account.banner %}
+    <img src="{{ account.banner }}" alt="Profile Banner" id="banner">
+    {% else %}
+    <img id="banner" src="https://images.unsplash.com/photo-1554779147-a2a22d816042?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" alt="No Profile Picture">
+    {% endif %}
 </div>
 <div class="container">
     <div class="acc-dis-cont visit-container justify-content-center">
+        {% if account.profile_picture %}
         <img src="{{ account.profile_picture }}" alt="Profile Picture" id="acc-pfp">
+        {% else %}
+        <img id="acc-pfp" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
+        {% endif %}
         <div class="acc-dis-details">
             <p class="visit-child acc-det-item" id="acc-un"><strong>{{ account.first_name }} {{ account.last_name }}</strong></p>
             <p class="visit-child acc-det-item" id="acc-em">@{{ account.username }}</p>
             <p class="visit-child acc-det-item" id="acc-em">Profile Picture Credit: {{ account.pfp_credit }}</p>
+            {% if account.banner %}
             <p class="visit-child acc-det-item" id="acc-em">Banner Credit: {{ account.banner_credit }}</p>
+            {% else %}
+            <p class="visit-child acc-det-item" id="acc-em">Banner Credit: Jordan Steranka on Unsplash</p>
+            {% endif %}
         </div>
     </div>
     <hr>
@@ -41,11 +53,11 @@
             </div>
             {% for listing in listings %}
             <div class="acct-card-cont">
-                <a href="#" class="wl-link">
+                <a href="{% url 'auctions:listing' listing.id %}" class="wl-link">
                     <div class="acct-card">
                         <div class="acct-card-img-cont">
-                            {% if listing.image_link %}
-                                <img class="acct-card-img" src="{{ listing.image_link }}" alt="death">
+                            {% if listing.image %}
+                                <img class="acct-card-img" src="{{ listing.image }}" alt="No Image Found">
                             {% else %}
                                 <img class="acct-card-img" src="https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg" alt="No Image Found">
                             {% endif %}

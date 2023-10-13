@@ -34,7 +34,11 @@
                         <li class="nav-item">
                             <div class="h-r-content header-pfp">
                                 <button type="button" class="pfp" id="pfp">
+                                    {% if user.profile_picture %}
                                     <img src="{{ user.profile_picture }}" alt="Profile Picture" id="pfp">
+                                    {% else %}
+                                    <img id="pfp" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
+                                    {% endif %}
                                 </button>
                             </div>
                         </li>
@@ -57,9 +61,13 @@
                     <span class="close" id="mcb">&times;</span>
                 </li>
                 <li class="modal-pf-details-section">
-                    <a href="{% url 'auctions:account' user.id %}">
+                    <a href="{% url 'auctions:profile' user.id %}">
                         <div class="mpd-cont">
+                            {% if user.profile_picture %}
                             <img src="{{ user.profile_picture }}" alt="Profile Picture" id="modal-pfp">
+                            {% else %}
+                            <img id="modal-pfp" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
+                            {% endif %}
                             <div class="mdp-details">
                                 <p id="modal-un"><strong>{{ user.username }}</strong></p>
                                 <p id="modal-em">{{ user.email }}</p>
@@ -78,7 +86,7 @@
                     </a>
                 </li>
                 <li class="modal-item">
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="/manage">
                         <i class='menu-link-icon bx bx-user'></i>Manage Account
                     </a>
                 </li>

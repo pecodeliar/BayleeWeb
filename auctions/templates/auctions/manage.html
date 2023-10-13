@@ -9,7 +9,7 @@
         {% if message %}
             <p class="alert alert-danger" role="alert">{{ message }}</p>
         {% endif %}
-        <form action="" method="POST">
+        <form onsubmit="event.preventDefault();" method="POST">
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group log-reg-item col mng-itm">
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="row mng-btn-cont float-right">
-                <input class=" log-reg-btn" id="mng-btn" type="submit" value="Save Changes">
+                <input class=" log-reg-btn" id="mng-btn" type="submit" value="Save Changes" onclick="editProfile('{{ request.user.id }}')">
             </div>
         </form>
     </div>

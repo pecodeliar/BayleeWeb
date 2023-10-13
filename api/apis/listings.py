@@ -58,6 +58,14 @@ class AuctionViewSet(viewsets.ModelViewSet):
         #if self.request.method == "POST" and auction.creator != user:
             #return Response(serializer.errors, status=status.HTTP_405_NOT_ALLOWED)
         return Response(AuctionSerializer(auction).data)
+    
+    @action(detail=False, methods=['GET'], url_path='watchlist', permission_classes=[permissions.IsAuthenticated])
+    def watchlist(self, request, *args, **kwargs):
+        """This is for getting all the listings the logged in user is watching."""
+
+        listings = Auction.objects.filter(watchers__id=request.user.pk).order_by("-creation_date").all()
+        results = AuctionSerializer(listings, many=True).data
+        return Response(results)
 
 
 @api_view(['GET', 'PATCH'])
