@@ -181,9 +181,14 @@ function listing(action, id=null) {
     const price = document.getElementById("id_price").value;
     const image = document.getElementById("id_image_link").value;
 
+    let url = null;
+    if (id === null) {
+        url = "/api/listings/";
+    } else {
+        url = `/api/listings/${id}/`
+    }
 
-
-        fetch(`/api/listings/${id}/`, {
+        fetch(url, {
             method: (action === "create") ? 'POST' : 'PATCH',
             //credentials: "same-origin",
             headers: {
@@ -211,5 +216,41 @@ function listing(action, id=null) {
         .catch(error => {
             toast("Error. Reason stickied above.", error);
         });
+}
+
+function watch(action, listingId) {
+
+    const csrftoken = getCookie('csrftoken');
+
+    /** Action should be 'Add' or 'Remove' */
+    return fetch(`/api/listings/${listingId}/watch`, {
+        method: 'PATCH',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        mode: 'same-origin',
+        body: JSON.stringify({
+            action: action
+        })
+    })
+    .then(response => response.json())
+    .then(() => {
+
+        const button = document.getElementById("list-wl-btn");
+
+        if (action === "Add") {
+            button.value = "Remove";
+            button.innerText = "Remove From Watchlist";
+        } else {
+            button.value = "Add";
+            button.innerText = "Add From Watchlist";
+        }
+
+    })
+    .catch(error => {
+        toast("Error. Reason stickied above.", error);
+    });
 
 }

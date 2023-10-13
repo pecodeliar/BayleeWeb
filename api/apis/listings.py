@@ -8,10 +8,29 @@ from rest_framework import status, permissions, viewsets
 from api.permissions import IsOwner
 from rest_framework import generics
 
+class IsOwnerPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if view.action in ['list', 'retrieve']:
+            return True
+        elif view.action in ['create', 'update', 'partial_update', 'destroy']:
+            return request.user and request.user.is_authenticated
+        else:
+            return False
+
+    def has_object_permission(self, request, view, obj):
+
+        if view.action == 'retrieve':
+            return True
+        elif view.action in ['create', 'update', 'partial_update', 'destroy']:
+            return obj.creator == request.user or request.user.is_staff
+        else:
+            return False
+
 
 class AuctionViewSet(viewsets.ModelViewSet):
     serializer_class = AuctionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsOwnerPermission]
 
 
     def perform_create(self, serializer):
@@ -24,20 +43,49 @@ class AuctionViewSet(viewsets.ModelViewSet):
         for the currently authenticated user.
         """
         user = self.request.user
-        return Auction.objects.filter(creator=user)
+        #return Auction.objects.filter(creator=user)
+        return Auction.objects.all()
 
     @action(detail=True)
     def auction_detail(self, request, pk):
         """
-        This view should return details for an auction
-        for the currently authenticated user that created the activity.
+        This view should return details for an auction 
+        but should only allow editing if authenticated user made the listing.
         """
         serializer = self.get_serializer(data=request.data)
         auction = self.get_object()
         user = self.request.user
-        if self.request.method == "POST" and auction.creator != user:
-            return Response(serializer.errors, status=status.HTTP_405_NOT_ALLOWED)
+        #if self.request.method == "POST" and auction.creator != user:
+            #return Response(serializer.errors, status=status.HTTP_405_NOT_ALLOWED)
         return Response(AuctionSerializer(auction).data)
+
+
+@api_view(['GET', 'PATCH'])
+def watch(request, listing_id):
+    """This function is for watching a listing.
+    This is to avoid having to make a completely seperate model for watchers/watchlist."""
+    data = request.data
+    if request.method == 'PATCH':
+
+        if data.get("action") not in ["Add", "Remove"]:
+            content = {"error": "You can only Add or Remove"}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        listing = Auction.objects.get(pk=listing_id)
+        if data.get("action") == "Add":
+            listing.watchers.add(request.user.id)
+            listing.save()
+            watchers = list(listing.watchers.all().values_list('pk', flat=True))
+            return Response(watchers)
+        elif data.get("action") == "Remove":
+            listing.watchers.remove(request.user.id)
+            listing.save()
+            watchers = list(listing.watchers.all().values_list('pk', flat=True))
+            return Response(watchers)
+        else:
+            content = {"error": "Must to be a listing."}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"error": "GET or PATCH request required."}, status=status.HTTP_400_BAD_REQUEST)
     
 
 class BidView(generics.CreateAPIView):

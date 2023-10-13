@@ -12,6 +12,8 @@ router.register(r"listings/(?P<listing_id>\d+)/comments", listings.CommentViewSe
 
 
 urlpatterns = [
+    path("listings/<int:listing_id>/watch", listings.watch, name="watch_action"),
+
     # User (Knox) Routes
     path('', include(router.urls)),
     #path('users/<int:pk>/update', users.UserUpdateView.as_view()),

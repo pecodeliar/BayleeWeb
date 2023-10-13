@@ -479,6 +479,9 @@ hr {
 
 /* --- Watchlist Page --- */
 
+.wl-text {
+    color: var(--on-background);
+}
 
 .wl-card-cont {
     display: flex;

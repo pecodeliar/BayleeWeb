@@ -107,8 +107,6 @@ def create_listing(request):
 def visit_listing(request, listing_id):
     listing = Auction.objects.get(pk=listing_id)
 
-    watchers = listing.watchers.all()
-    user_is_watcher = False
     user_is_highest_bidder = False
 
    # The listing does not exist.
@@ -131,10 +129,6 @@ def visit_listing(request, listing_id):
     if request.user.is_authenticated:
         user = User.objects.get(pk=request.user.pk)
 
-        # Check if user is watcher
-        if user in watchers:
-            user_is_watcher = True
-
         # Check if logged in user has highest bid
         if bid_count != 0 and user == highest_bid.user:
             user_is_highest_bidder = True
@@ -145,17 +139,6 @@ def visit_listing(request, listing_id):
         if "theme_button" in request.POST.keys():
             theme_switch(user, request.POST["theme_button"])
             return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
-
-        # The Watchlist button was pressed
-        if "watchlist_button" in request.POST.keys():
-            # https://docs.djangoproject.com/en/4.1/ref/forms/api/#accessing-clean-data
-            option = request.POST["watchlist_button"]
-            if option == "Add to Watchlist":
-                listing.watchers.add(user)
-                return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
-            elif option == "Remove From Watchlist":
-                listing.watchers.remove(user)
-                return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
 
         # The Closed button was pressed by creator
         if "close_auction_button" in request.POST.keys():
@@ -177,7 +160,6 @@ def visit_listing(request, listing_id):
                         "listing": listing,
                         "bid_form": BidForm(),
                         "bid_apology": True,
-                        "in_watchlist": user_is_watcher,
                         "highest_bidder": user_is_highest_bidder,
                         "comments": comments,
                         "comment_count": comment_count,
@@ -209,7 +191,6 @@ def visit_listing(request, listing_id):
                     "bid_form": BidForm(),
                     "bid_count": bid_count,
                     "bid_apology": False,
-                    "in_watchlist": user_is_watcher,
                     "highest_bidder": user_is_highest_bidder,
                     "comments": comments,
                     "comment_count": comment_count,

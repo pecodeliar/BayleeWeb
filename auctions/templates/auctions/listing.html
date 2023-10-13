@@ -39,13 +39,13 @@
         <h2 class="card-title listing-title">{{ listing.title }}</h2>
         <div class="listing-card">
             {% if user.is_authenticated %}
-                <form method="POST">
+                <form method="POST" onsubmit="event.preventDefault();">
                     {% if request.user in listing.watchers.all and request.user != listing.creator %}
                     {% csrf_token %}
-                    <input type="submit" class="visit-list-btn wl-btn" name="watchlist_button" value="Remove From Watchlist">
+                    <button type="submit" id="list-wl-btn" class="visit-list-btn wl-btn" name="watchlist_button" value="Remove" onclick="watch(this.value, '{{listing.id}}')">Remove From Watchlist</button>
                     {% elif request.user not in listing.watchers.all and request.user != listing.creator %}
                     {% csrf_token %}
-                    <input type="submit" class="visit-list-btn wl-btn" name="watchlist_button" value="Add to Watchlist">
+                    <button type="submit"id="list-wl-btn" class="visit-list-btn wl-btn" name="watchlist_button" value="Add" onclick="watch(this.value, '{{listing.id}}')">Add to Watchlist</button>
                     {% endif %}
                 </form>
             {% endif %}
