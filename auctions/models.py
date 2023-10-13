@@ -34,7 +34,7 @@ class Auction(models.Model):
         choices=Category.choices,
         default=Category.OTHER
     )
-    creation_date = models.DateField(default=django.utils.timezone.now())
+    creation_date = models.DateField(auto_now=True)
     creation_time = models.TimeField(auto_now=True)
     watchers = models.ManyToManyField(User, blank=True, related_name="auction_watchers")
     active = models.BooleanField(default=True)

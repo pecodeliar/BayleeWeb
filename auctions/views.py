@@ -85,8 +85,10 @@ def index(request):
             return HttpResponseRedirect(reverse("auctions:index"))
     else:
         items = sorted(Auction.objects.filter(active=True).all(), key=lambda x: random.random())
+        for item in items:
+            print(item.image)
         return render(request, "auctions/index.html", {
-        "listings": items
+        "listings": list(items)
     })
 
 def logout_view(request):
@@ -98,37 +100,8 @@ def logout_view(request):
 
 @login_required
 def create_listing(request):
-    if request.method == "POST":
-        # User is switch themes
-        if "theme_button" in request.POST.keys():
-            theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
-            return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
-
-        form = ListingForm(request.POST)
-        if form.is_valid():
-            # https://docs.djangoproject.com/en/4.1/topics/auth/customizing/
-            creator = User.objects.get(pk=request.user.pk)
-
-            # Not to self: Should I check for a duplicate listing?
-            title = form.cleaned_data['title']
-            description = form.cleaned_data['description']
-            price = form.cleaned_data['price']
-            category_id = request.POST["category"]
-            category = Category.objects.get(pk=category_id)
-
-            image_link = form.cleaned_data['image_link']
-            # https://docs.djangoproject.com/en/4.1/topics/db/queries/
-            new_listing = Auction(creator_id=creator, title=title, description=description, price=price, image_link=image_link, category_id=category)
-            new_listing.save()
-            return render(request, "auctions/account.html", {
-                    "account": creator,
-                    "comments": Comment.objects.filter(user=creator),
-                    "listings": Auction.objects.filter(creator_id=creator)
-                })
-    else:
-        return render(request, "auctions/create.html", {
-            "form_fields": list(ListingForm()),
-            "categories": Category.objects.all()
+    return render(request, "auctions/create.html", {
+            "form_fields": list(ListingForm())
         })
 
 def visit_listing(request, listing_id):
@@ -137,7 +110,6 @@ def visit_listing(request, listing_id):
     watchers = listing.watchers.all()
     user_is_watcher = False
     user_is_highest_bidder = False
-    user_is_creator = False
 
    # The listing does not exist.
     if listing == None:
@@ -158,10 +130,6 @@ def visit_listing(request, listing_id):
     # Check if a user is logged in
     if request.user.is_authenticated:
         user = User.objects.get(pk=request.user.pk)
-
-        # Check if user is the creator
-        if user == listing.creator_id:
-            user_is_creator = True
 
         # Check if user is watcher
         if user in watchers:
@@ -211,7 +179,6 @@ def visit_listing(request, listing_id):
                         "bid_apology": True,
                         "in_watchlist": user_is_watcher,
                         "highest_bidder": user_is_highest_bidder,
-                        "creator_logged_in": user_is_creator,
                         "comments": comments,
                         "comment_count": comment_count,
                         "comment_form": CommentForm()
@@ -244,7 +211,6 @@ def visit_listing(request, listing_id):
                     "bid_apology": False,
                     "in_watchlist": user_is_watcher,
                     "highest_bidder": user_is_highest_bidder,
-                    "creator_logged_in": user_is_creator,
                     "comments": comments,
                     "comment_count": comment_count,
                     "comment_form": CommentForm()
@@ -359,65 +325,24 @@ def edit(request, listing_id):
     # Check if there have been bids
     bid_count = Bid.objects.filter(auction=listing).count()
 
-    # Make sure that logged in user is creator
-    is_creator = False
-    user = User.objects.get(pk=request.user.pk)
-    if user == listing.creator_id:
-        is_creator = True
-
     if request.method == "POST":
 
         # User is switch themes
         if "theme_button" in request.POST.keys():
             theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
             return HttpResponseRedirect(reverse("auctions:edit", args=(listing.id,)))
-
-        # User submitted changes for listing by pressing Save Changes button
-
-        if "save_edit_button" in request.POST.keys():
-            form = ListingForm(request.POST)
-            if form.is_valid():
-                # Bids have not been placed on the listing
-                if bid_count == 0:
-                    listing.title = form.cleaned_data['title']
-                    listing.description = form.cleaned_data['description']
-                    listing.price = form.cleaned_data['price']
-                    listing.image_link = form.cleaned_data['image_link']
-
-                    category_id = request.POST["category"]
-                    listing.category = Category.objects.get(pk=category_id)
-
-                    listing.save()
-                    return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
-                # Bids have been placed so the user should not be able to change it anymore
-                else:
-                    listing.title = form.cleaned_data['title']
-                    listing.description = form.cleaned_data['description']
-                    listing.image_link = form.cleaned_data['image_link']
-
-                    category_id = request.POST["category"]
-                    listing.category = Category.objects.get(pk=category_id)
-
-                    listing.save()
-                    return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
-            else:
-                # Something went wrong
-                return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
     else:
         # GET method
         default_data = {
             'title': listing.title,
             'description': listing.description,
-            'price': listing.price,
-            'image_link': listing.image_link,
+            'price': listing.starting_price,
+            'image_link': listing.image,
             }
         # https://stackoverflow.com/questions/65833407/divide-django-form-fields-to-two-divs
         return render(request, "auctions/edit.html", {
                     "listing": listing,
                     "form_fields": list(ListingForm(default_data)),
-                    "categories": Category.objects.all(),
-                    "is_creator": is_creator,
-                    "category_id": listing.category_id,
                     "bid_count": bid_count
                 })
 

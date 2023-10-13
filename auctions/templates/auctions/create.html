@@ -9,7 +9,8 @@
 <div class="container">
     <div class="container log-reg-cont mng-cnt">
         <h2>Create Listing</h2>
-        <form action="{% url 'auctions:create' %}" method="post">
+        <form onsubmit="event.preventDefault();" method="post">
+            <p class="alert alert-danger" role="alert" id="alert"></p>
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group log-reg-item col mng-itm">
@@ -29,7 +30,7 @@
                         {{ form_fields.2.label }}:
                         {{ form_fields.2 }}
                     </div>
-                    <select name="category" class="form-group col mng-itm" id="mng-sel">
+                    <!--<select name="category" class="form-group col mng-itm" id="mng-sel">
                         {% for category in categories %}
                             {% if category.id == 9 %}
                             <option value="{{ category.id }}" selected>{{ category.name }}</option>
@@ -37,7 +38,7 @@
                             <option value="{{ category.id }}">{{ category.name }}</option>
                             {% endif %}
                         {% endfor %}
-                    </select>
+                    </select>-->
                 </div>
                 <div class="form-group log-reg-item col mng-itm">
                     {{ form_fields.3.label }}:
@@ -45,7 +46,7 @@
                 </div>
             </div>
             <div class="row mng-btn-cont float-right">
-                <input class=" log-reg-btn" id="mng-btn" type="submit" value="Create Listing">
+                <input class=" log-reg-btn" id="mng-btn" type="submit" value="Create Listing" onclick="listing('create')">
             </div>
         </form>
     </div>

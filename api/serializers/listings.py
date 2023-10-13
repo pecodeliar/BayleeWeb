@@ -2,7 +2,7 @@ from rest_framework import serializers
 from auctions.models import Auction, Bid, Comment
 
 
-class AuctionSerializer(serializers.HyperlinkedModelSerializer):
+class AuctionSerializer(serializers.ModelSerializer):
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Auction
@@ -21,7 +21,7 @@ class AuctionSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class BidSerializer(serializers.HyperlinkedModelSerializer):
+class BidSerializer(serializers.ModelSerializer):
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Bid
@@ -34,7 +34,7 @@ class BidSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Comment

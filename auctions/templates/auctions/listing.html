@@ -1,40 +1,127 @@
 {% extends "auctions/base.html" %}
 
+{% block title %}
+    {% if listing == None %}
+        Page Not Found
+    {% else %}
+        {{ listing.title }} | Auctions
+    {% endif %}
+{% endblock %}
+
 {% block body %}
 
-    <div class="container log-reg-cont">
-        <h2>Register</h2>
-        {% if message %}
-            <p class="alert alert-danger" role="alert">{{ message }}</p>
+<div class="page-status container">
+    {% if highest_bidder == True and creator_logged_in == False and listing.active == False %}
+        <p class="alert alert-success" role="alert">Congratulations! You have won the auction.</p>
+    {% elif highest_bidder == False and creator_logged_in == False and listing.active == False %}
+        <p class="alert alert-danger" role="alert">This auction is now closed.</p>
+    {% elif creator_logged_in == True and listing.active == False %}
+        <p class="alert alert-warning" role="alert">You have closed this auction.</p>
+    {% elif not user.is_authenticated and listing.active == False %}
+    <p class="alert alert-danger" role="alert">This auction is now closed.</p>
+    {% endif %}
+</div>
+
+<div class="visit-container justify-content-center container">
+
+    <div class="visit-img-cont visit-new">
+        {% if listing.image  %}
+            <img class="visit-listing-img" src="{{ listing.image }}" alt="{{ listing.title }}">
+        {% else %}
+        <img class="visit-listing-img" src="https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg" alt="No Image Found">
         {% endif %}
-        <form action="#" method="post">
-            {% csrf_token %}
-            <div class="form-row">
-                <div class="form-group log-reg-item col">
-                    <input class="form-control shadow-none log-reg-inp" autofocus type="text" name="first_name" placeholder="First Name">
-                </div>
-                <div class="form-group log-reg-item col">
-                    <input class="form-control shadow-none log-reg-inp" autofocus type="text" name="last_name" placeholder="Last Name">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group log-reg-item col">
-                    <input class="form-control shadow-none log-reg-inp" autofocus type="text" name="username" placeholder="Username">
-                </div>
-                <div class="form-group log-reg-item col">
-                    <input class="form-control shadow-none log-reg-inp" type="email" name="email" placeholder="Email Address">
-                </div>
-            </div>
-            <div class="form-group log-reg-item">
-                <input class="form-control shadow-none log-reg-inp" type="password" name="password" placeholder="Password">
-            </div>
-            <div class="form-group log-reg-item">
-                <input class="form-control shadow-none log-reg-inp" type="password" name="confirmation" placeholder="Confirm Password">
-            </div>
-            <input class="btn btn-primary log-reg-btn float-right" type="submit" value="Register">
-        </form>
-        <p class="log-reg-link">Already have an account? <a href="#">Log In here.</a></p>
     </div>
 
+    <div class="visit-new" id="yourmom">
+        {% if listing.creator == request.user and listing.active == True %}
+            <a class="edit-act float-right" href="{% url 'auctions:edit' listing.id %}"><i class='bx bxs-edit'></i></a>
+        {% endif %}
+        <h2 class="card-title listing-title">{{ listing.title }}</h2>
+        <div class="listing-card">
+            {% if user.is_authenticated %}
+                <form method="POST">
+                    {% if request.user in listing.watchers.all and request.user != listing.creator %}
+                    {% csrf_token %}
+                    <input type="submit" class="visit-list-btn wl-btn" name="watchlist_button" value="Remove From Watchlist">
+                    {% elif request.user not in listing.watchers.all and request.user != listing.creator %}
+                    {% csrf_token %}
+                    <input type="submit" class="visit-list-btn wl-btn" name="watchlist_button" value="Add to Watchlist">
+                    {% endif %}
+                </form>
+            {% endif %}
+        </div>
+        <p class="card-text listing-description details-category">{{ listing.description }}</p>
+        {% load humanize %}
+        <h3 class="card-text listing-price details-category">${{ listing.starting_price|intcomma }}</h3>
+        <p class="details-category">{{ bid_count }} bid(s) so far. {% if user.is_authenticated and highest_bidder == True %}Your bid is the current bid.{% endif %}</p>
+        {% if bid_apology == True %}<p class="alert alert-danger" role="alert">Your bid needs to be higher than the current price.</p>{% endif %}
+        <div class="details">
+            <div class="det-creator-cont">
+                <a href="#">
+                    <img class="det-creator-img" src="{{ listing.creator.profile_picture }}" alt="Profile Picture">
+                </a>
+                <p class="card-text details-creator">Listed by: <a href="#">{{ listing.creator }}</a></p>
+            </div>
+            <!--{% if listing.category_id == null %}
+                <p class="details-category">Category: No Category Listed</p>
+            {% else %}
+                <p class="details-category">Category: {{ listing.category_id.name }}</p>
+            {% endif %}-->
+            <p class="details-created details-category">Created: {{ listing.creation_date }}, {{ listing.creation_time }}</p>
+        </div>
+        {% if user.is_authenticated %}
+        <form method="POST" class="bid">
+            {% if request.user != listing.creator and listing.active == True %}
+            {% csrf_token %}
+            {{ bid_form }}
+            <input class="visit-list-btn" type="submit" name="place_bid_button" value="Place Bid">
+            {% elif request.user == listing.creator and listing.active == True %}
+            {% csrf_token %}
+            <input type="submit" class="visit-list-btn close-auct-btn" name="close_auction_button" value="Close Auction">
+            {% endif %}
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container">
+    <div class="comments-section">
+        <h4 class="details-category">{{ comment_count }} Comment(s)</h4>
+        <br>
+        <div class="row justify-content-center">
+            <div class="make-comment-cont">
+                {% if user.is_authenticated %}
+                <div class="cmnt-card-img-w-text-box">
+                    <div class="logged-comment-pfp">
+                        <img class="comment-pfp" src="{{ user.profile_picture }}" alt="Profile Picture">
+                    </div>
+                    <form method="POST" class="comment-submit">
+                    {% csrf_token %}
+                    {{ comment_form }}
+                    <input class="visit-list-btn float-right" id="add-cmnt-btn" type="submit" name="add_comment_button" value="Add Comment">
+                    </form>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            {% for comment in comments reversed %}
+                <div class="comment-item">
+                    <div class="users-comment-pfp">
+                        <a href="{% url 'auctions:account' comment.user.id %}">
+                            <img class="comment-pfp" src="{{ comment.user.profile_picture }}" alt="Profile Picture">
+                        </a>
+                    </div>
+                    <div class="comment-details">
+                        <p class="" id="user-cmnt-name"><a href="{% url 'auctions:account' comment.user.id %}">{{ comment.user.username }}</a></p>
+                        <p class="" id="user-cmnt-text">{{ comment.text }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="details-category">No comments have been made for this item.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 
 {% endblock %}

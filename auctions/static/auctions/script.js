@@ -24,6 +24,8 @@ window.onclick = function(event) {
   }
 }
 
+
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -163,5 +165,51 @@ function authentication(action) {
   }
 
 
+
+}
+
+function listing(action, id=null) {
+
+    /** Action should be either "create" or "edit".
+     * If action is edit, id should be passed into the function as well.
+     */
+
+    const csrftoken = getCookie('csrftoken');
+
+    const title = document.getElementById("id_title").value;
+    const description = document.getElementById("id_description").value;
+    const price = document.getElementById("id_price").value;
+    const image = document.getElementById("id_image_link").value;
+
+
+
+        fetch(`/api/listings/${id}/`, {
+            method: (action === "create") ? 'POST' : 'PATCH',
+            //credentials: "same-origin",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+              },
+            body: JSON.stringify({
+                title: title,
+                description: description,
+                starting_price: price,
+                image: image
+            })
+        })
+        .then(response => {
+            if (response.ok) return response.json();
+            return response.json().then(response => {throw new Error(response.error)})
+        })
+        .then(data => {
+
+          console.log(data)
+          window.location.href = `/listing/${data.id}`;
+
+        })
+        .catch(error => {
+            toast("Error. Reason stickied above.", error);
+        });
 
 }

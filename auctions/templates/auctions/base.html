@@ -21,7 +21,7 @@
                         <h1>Auctions</h1>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Active Listings</a>
+                        <a class="nav-link" href="/">Active Listings</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Categories</a>
@@ -73,7 +73,7 @@
                     </a>
                 </li>
                 <li class="modal-item">
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="/create">
                         <i class='menu-link-icon bx bx-edit'></i>Create Listing
                     </a>
                 </li>
@@ -107,5 +107,6 @@
         {% endif %}
         {% block body %}
         {% endblock %}
+        <div id="snackbar"></div>
     </body>
 </html>
