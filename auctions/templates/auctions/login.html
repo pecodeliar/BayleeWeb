@@ -1,0 +1,27 @@
+{% extends "auctions/base.html" %}
+
+{% block body %}
+
+    <div class="container log-reg-cont">
+        <h2>Login</h2>
+        <br>
+        {% if message %}
+            <p class="alert alert-danger" role="alert">{{ message }}</p>
+        {% endif %}
+        <form action="#" method="post">
+            {% csrf_token %}
+            <div class="form-group log-reg-item">
+                <input autofocus class="form-control shadow-none log-reg-inp" type="text" name="username" placeholder="Username">
+            </div>
+            <div class="form-group log-reg-item">
+                <input class="form-control shadow-none log-reg-inp" type="password" name="password" placeholder="Password">
+            </div>
+            <input class="btn btn-primary log-reg-btn float-right" type="submit" value="Login">
+        </form>
+        <p class="log-reg-link">Don't have an account? <a href="#">Register here.</a></p>
+    </div>
+
+
+
+
+{% endblock %}

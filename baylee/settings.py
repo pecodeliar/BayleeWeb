@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'auctions',
+    'api',
     'rest_framework',
     'knox',
     'rest_framework.authtoken',
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -73,7 +76,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'baylee.wsgi.application'
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'auctions.User'
 
 
 # Database

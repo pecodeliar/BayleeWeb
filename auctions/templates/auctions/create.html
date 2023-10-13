@@ -1,0 +1,56 @@
+{% extends "auctions/base.html" %}
+
+{% block title %}
+    Create New Listing
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="container log-reg-cont mng-cnt">
+        <h2>Create Listing</h2>
+        <form action="{% url 'auctions:create' %}" method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group log-reg-item col mng-itm">
+                    {{ form_fields.0.label }}:
+                    {{ form_fields.0 }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group log-reg-item col mng-itm">
+                    {{ form_fields.1.label }}:
+                    {{ form_fields.1 }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-row">
+                    <div class="form-group log-reg-item col mng-itm">
+                        {{ form_fields.2.label }}:
+                        {{ form_fields.2 }}
+                    </div>
+                    <select name="category" class="form-group col mng-itm" id="mng-sel">
+                        {% for category in categories %}
+                            {% if category.id == 9 %}
+                            <option value="{{ category.id }}" selected>{{ category.name }}</option>
+                            {% else %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group log-reg-item col mng-itm">
+                    {{ form_fields.3.label }}:
+                    {{ form_fields.3 }}
+                </div>
+            </div>
+            <div class="row mng-btn-cont float-right">
+                <input class=" log-reg-btn" id="mng-btn" type="submit" value="Create Listing">
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+{% endblock %}

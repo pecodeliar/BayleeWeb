@@ -1,0 +1,67 @@
+{% extends "auctions/base.html" %}
+
+{% block body %}
+
+<div class="banner-row">
+    <img src="#" alt="Profile Banner" id="banner">
+</div>
+<div class="container">
+    <div class="acc-dis-cont visit-container justify-content-center">
+        <img src="{{ account.profile_picture }}" alt="Profile Picture" id="acc-pfp">
+        <div class="acc-dis-details">
+            <p class="visit-child acc-det-item" id="acc-un"><strong>{{ account.first_name }} {{ account.last_name }}</strong></p>
+            <p class="visit-child acc-det-item" id="acc-em">@{{ account.username }}</p>
+            <p class="visit-child acc-det-item" id="acc-em">Profile Picture Credit: {{ account.pfp_credit }}</p>
+            <p class="visit-child acc-det-item" id="acc-em">Banner Credit: {{ account.banner_credit }}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="visit-container">
+        <div class="justify-content-center visit-child">
+            <div>
+                <h4 class="acct-title">{{ comments.count }} Comment(s)</h4>
+            </div>
+            {% for comment in comments reversed %}
+                <div class="comment-item">
+                    <div class="users-comment-pfp">
+                        <img class="comment-pfp" src="{{ comment.user.profile_picture }}" alt="Profile Picture">
+                    </div>
+                    <div class="comment-details">
+                        <p class="" id="user-cmnt-name">On <a href="#">{{ comment.auction.title }}</a></p>
+                        <p class="" id="user-cmnt-text">{{ comment.text }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="details-category">This user has not made any comments.</p>
+            {% endfor %}
+        </div>
+        <div class="justify-content-center visit-child">
+            <div>
+                <h4 class="acct-title">{{ listings.count }} Auction(s)</h4>
+            </div>
+            {% for listing in listings %}
+            <div class="acct-card-cont">
+                <a href="#" class="wl-link">
+                    <div class="acct-card">
+                        <div class="acct-card-img-cont">
+                            {% if listing.image_link %}
+                                <img class="acct-card-img" src="{{ listing.image_link }}" alt="death">
+                            {% else %}
+                                <img class="acct-card-img" src="https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg" alt="No Image Found">
+                            {% endif %}
+                        </div>
+                        <div class="card-body acct-card-details">
+                            <h5 class="acct-list-t">{{ listing.title }}</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p class="details-category">This user has not posted any listings.</p>
+        {% endfor %}
+        </div>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

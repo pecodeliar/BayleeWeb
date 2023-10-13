@@ -1,0 +1,65 @@
+{% extends "auctions/base.html" %}
+
+{% block title %}
+    Edit Listing
+{% endblock %}
+
+{% block body %}
+
+{% if is_creator == False %}
+    <div class="container">
+        <p class="alert alert-danger" role="alert">Access denied.</p>
+    </div>
+{% else %}
+    <div class="container">
+        <div class="container log-reg-cont mng-cnt">
+            <h2>Edit Listing</h2>
+            <form action="#" method="POST">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group log-reg-item col mng-itm">
+                        {{ form_fields.0.label }}:
+                        {{ form_fields.0 }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group log-reg-item col mng-itm">
+                        {{ form_fields.1.label }}:
+                        {{ form_fields.1 }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-row">
+                        {% if bid_count != 0 %}
+                            {% load humanize %}
+                            <div class="form-group log-reg-item col mng-itm edit-price-box">
+                                <h3 id="edit-price">${{ listing.price|intcomma }}</h3>
+                            </div>
+                        {% else %}
+                            <div class="form-group log-reg-item col mng-itm">
+                                {{ form_fields.2.label }}:
+                                {{ form_fields.2 }}
+                            </div>
+                        {% endif %}
+                        <select name="category" class="form-group col mng-itm" id="mng-sel">
+                            {% for category in categories %}
+                                {% if category.id == category_id.id %}
+                                <option value="{{ category.id }}" selected>{{ category.name }}</option>
+                                {% else %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group log-reg-item col mng-itm">
+                        {{ form_fields.3.label }}:
+                        {{ form_fields.3 }}
+                    </div>
+                </div>
+                <div class="row mng-btn-cont float-right">
+                    <input class=" log-reg-btn" name="save_edit_button" id="mng-btn" type="submit" value="Save Edit">
+                </div>
+            </form>
+        </div>
+    </div>
+{% endif %}

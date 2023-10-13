@@ -1,0 +1,40 @@
+{% extends "auctions/base.html" %}
+
+{% block body %}
+
+    <div class="container log-reg-cont">
+        <h2>Register</h2>
+        {% if message %}
+            <p class="alert alert-danger" role="alert">{{ message }}</p>
+        {% endif %}
+        <form action="#" method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group log-reg-item col">
+                    <input class="form-control shadow-none log-reg-inp" autofocus type="text" name="first_name" placeholder="First Name">
+                </div>
+                <div class="form-group log-reg-item col">
+                    <input class="form-control shadow-none log-reg-inp" autofocus type="text" name="last_name" placeholder="Last Name">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group log-reg-item col">
+                    <input class="form-control shadow-none log-reg-inp" autofocus type="text" name="username" placeholder="Username">
+                </div>
+                <div class="form-group log-reg-item col">
+                    <input class="form-control shadow-none log-reg-inp" type="email" name="email" placeholder="Email Address">
+                </div>
+            </div>
+            <div class="form-group log-reg-item">
+                <input class="form-control shadow-none log-reg-inp" type="password" name="password" placeholder="Password">
+            </div>
+            <div class="form-group log-reg-item">
+                <input class="form-control shadow-none log-reg-inp" type="password" name="confirmation" placeholder="Confirm Password">
+            </div>
+            <input class="btn btn-primary log-reg-btn float-right" type="submit" value="Register">
+        </form>
+        <p class="log-reg-link">Already have an account? <a href="#">Log In here.</a></p>
+    </div>
+
+
+{% endblock %}
