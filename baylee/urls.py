@@ -18,12 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from api.urls import router as api_router
+import os
 
 router = DefaultRouter()
 router.registry.extend(api_router.registry)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(f"{os.environ['ADMIN_URL']}/", admin.site.urls),
     path("", include("auctions.urls")),
     path("api/", include("api.urls")),
 ]
