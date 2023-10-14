@@ -120,11 +120,11 @@ def visit_listing(request, listing_id):
         })
 
     # Find if there are comments for listing
-    comments = Comment.objects.filter(auction=listing)
+    comments = Comment.objects.filter(auction=listing).order_by("timestamp").all()
     comment_count = comments.count()
 
     # Find if listings has bids
-    bids = Bid.objects.filter(auction=listing).order_by("-timestamp").all()
+    bids = Bid.objects.filter(auction=listing).order_by("timestamp").all()
     bid_count = bids.count()
     if bid_count != 0:
         highest_bid = bids.order_by('-price').first()
@@ -151,16 +151,6 @@ def visit_listing(request, listing_id):
             listing.save()
             return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
 
-        # The User is trying to ass a comment using the Add Comment button
-        if "add_comment_button" in request.POST.keys():
-
-            form = CommentForm(request.POST)
-            if form.is_valid():
-
-                comment = form.cleaned_data['comment']
-                new_comment = Comment(auction=listing, user=user, text=comment)
-                new_comment.save()
-                return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
     else:
         # GET method
         return render(request, "auctions/listing.html", {

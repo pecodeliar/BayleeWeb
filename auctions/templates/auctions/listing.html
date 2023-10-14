@@ -95,47 +95,47 @@
 
 <div class="container">
     <div class="comments-section">
-        <h4 class="details-category">{{ comment_count }} Comment(s)</h4>
+        <h4 class="details-category" id="cmnt-cnt">{{ comment_count }} Comment(s)</h4>
         <br>
         <div class="row justify-content-center">
             <div class="make-comment-cont">
                 {% if user.is_authenticated %}
                 <div class="cmnt-card-img-w-text-box">
                     <div class="logged-comment-pfp">
-                        {% if account.profile_picture %}
-                        <img class="comment-pfp" src="{{ user.profile_picture }}" alt="Profile Picture">
+                        {% if user.profile_picture %}
+                        <img class="comment-pfp" id="make-cmnt-pfp" src="{{ user.profile_picture }}" alt="Profile Picture">
                         {% else %}
-                        <img class="comment-pfp" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
+                        <img class="comment-pfp" id="make-cmnt-pfp" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
                         {% endif %}
                     </div>
-                    <form method="POST" class="comment-submit">
+                    <form method="POST" class="comment-submit" onsubmit="event.preventDefault();">
                     {% csrf_token %}
                     {{ comment_form }}
-                    <input class="visit-list-btn float-right" id="add-cmnt-btn" type="submit" name="add_comment_button" value="Add Comment">
+                    <input class="visit-list-btn float-right" id="add-cmnt-btn" type="submit" name="add_comment_button" value="Add Comment" onclick="makeComment('{{listing.id}}', '{{user.username}}')">
                     </form>
                 </div>
             {% endif %}
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="comments-row">
             {% for comment in comments reversed %}
                 <div class="comment-item">
                     <div class="users-comment-pfp">
                         <a href="{% url 'auctions:profile' comment.creator.id %}">
-                            {% if account.profile_picture %}
-                            <img class="comment-pfp" src="{{ listing.creator.profile_picture }}" alt="Profile Picture">
+                            {% if comment.creator.profile_picture %}
+                            <img class="comment-pfp" src="{{ comment.creator.profile_picture }}" alt="Profile Picture">
                             {% else %}
                             <img class="comment-pfp" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
                             {% endif %}
                         </a>
                     </div>
                     <div class="comment-details">
-                        <p class="" id="user-cmnt-name"><a href="{% url 'auctions:account' comment.creator.id %}">{{ comment.user.username }}</a></p>
+                        <p class="" id="user-cmnt-name"><a href="{% url 'auctions:profile' comment.creator.id %}">{{ comment.creator.username }}</a></p>
                         <p class="" id="user-cmnt-text">{{ comment.text }}</p>
                     </div>
                 </div>
             {% empty %}
-                <p class="details-category">No comments have been made for this item.</p>
+                <p class="details-category" id="no-cmnts-text">No comments have been made for this item.</p>
             {% endfor %}
         </div>
     </div>

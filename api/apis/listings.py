@@ -141,7 +141,7 @@ class BidViewSet(mixins.CreateModelMixin,
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsOwnerPermission]
 
     # https://stackoverflow.com/questions/54983239/pass-url-parameter-to-serializer
     def get_serializer_context(self):
@@ -155,7 +155,8 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
     def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
+        listing = Auction.objects.get(pk=self.kwargs['auction_id'])
+        serializer.save(auction=listing, creator=self.request.user)
 
 
     def get_queryset(self):
@@ -163,8 +164,8 @@ class CommentViewSet(viewsets.ModelViewSet):
         This view should return a list of all the comments
         for the currently authenticated user.
         """
-        user = self.request.user
-        return Comment.objects.filter(creator=user)
+        listing = Auction.objects.get(pk=self.kwargs['auction_id'])
+        return Comment.objects.filter(auction=listing)
 
     @action(detail=True)
     def auction_detail(self, request, pk):
@@ -172,9 +173,5 @@ class CommentViewSet(viewsets.ModelViewSet):
         This view should return details for an auction
         for the currently authenticated user that created the activity.
         """
-        serializer = self.get_serializer(data=request.data)
         comment = self.get_object()
-        user = self.request.user
-        if self.request.method == "POST" and comment.creator != user:
-            return Response(serializer.errors, status=status.HTTP_405_NOT_ALLOWED)
         return Response(CommentSerializer(comment).data)

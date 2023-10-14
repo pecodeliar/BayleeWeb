@@ -36,10 +36,10 @@
             {% for comment in comments reversed %}
                 <div class="comment-item">
                     <div class="users-comment-pfp">
-                        <img class="comment-pfp" src="{{ comment.user.profile_picture }}" alt="Profile Picture">
+                        <img class="comment-pfp" src="{{ comment.creator.profile_picture }}" alt="Profile Picture">
                     </div>
                     <div class="comment-details">
-                        <p class="" id="user-cmnt-name">On <a href="#">{{ comment.auction.title }}</a></p>
+                        <p class="" id="user-cmnt-name">On <a href="/listing/{{ comment.auction.id }}">{{ comment.auction.title }}</a></p>
                         <p class="" id="user-cmnt-text">{{ comment.text }}</p>
                     </div>
                 </div>

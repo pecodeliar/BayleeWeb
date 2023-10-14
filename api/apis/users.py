@@ -1,6 +1,6 @@
-from auctions.models import User, Auction
+from auctions.models import User, Auction, Comment
 from api.serializers.users import UserSerializer, RegisterSerializer, LoginSerializer
-from api.serializers.listings import AuctionSerializer
+from api.serializers.listings import AuctionSerializer, CommentSerializer
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.decorators import api_view
@@ -58,7 +58,7 @@ class UserViewSet(viewsets.ModelViewSet):
         results = AuctionSerializer(posts, many=True).data
         return Response(results)
     
-    """@action(detail=False, methods=['GET'], url_path='(?P<user_id>\d+)/comments', permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['GET'], url_path='(?P<user_id>\d+)/comments', permission_classes=[permissions.AllowAny])
     def comments(self, request, user_id, *args, **kwargs):
         # This for getting all the comments made by a user
 
@@ -66,7 +66,7 @@ class UserViewSet(viewsets.ModelViewSet):
         user = users.get(pk=user_id)
         comments = Comment.objects.filter(creator=user).order_by("-creation_date").all()
         results = CommentSerializer(comments, many=True).data
-        return Response(results)"""
+        return Response(results)
 
 
 class RegisterView(generics.CreateAPIView):

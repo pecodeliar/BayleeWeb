@@ -344,3 +344,86 @@ function placeBid(listingId) {
     });
 
 }
+
+function makeComment(listingId, username) {
+
+    const text = document.getElementById("id_comment");
+
+    const csrftoken = getCookie('csrftoken');
+
+    fetch(`/api/listings/${listingId}/comments/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        mode: 'same-origin',
+        body: JSON.stringify({
+            text: text.value
+        })
+    })
+    .then(response => {
+        if (response.ok) return response.json();
+        return response.json().then(response => {
+            if (response.price !== undefined) {
+                throw new Error(response.text);
+            } else if (response.error !== undefined) {
+                throw new Error(response.error);
+            }  else if (response.non_field_errors !== undefined) {
+                throw new Error(response.non_field_errors);
+            }
+        })
+    })
+    .then(result => {
+
+        console.log(result);
+
+        text.value = "";
+
+        // Add comment element to page without reloading
+        const container = document.getElementById("comments-row");
+
+        const parent = document.createElement("div");
+        parent.setAttribute("class", "comment-item");
+        container.prepend(parent);
+        
+        const pfpCont = document.createElement("div");
+        pfpCont.setAttribute("class", "users-comment-pfp");
+        parent.append(pfpCont);
+
+        const pfpLink = document.createElement("a");
+        pfpLink.setAttribute("href", `/profile/${result.creator}`);
+        pfpCont.append(pfpLink);
+
+        const pfpImg = document.createElement("img");
+        pfpImg.setAttribute("class", "comment-pfp");
+        pfpImg.src = document.getElementById("make-cmnt-pfp").src;
+        pfpLink.append(pfpImg);
+
+        const textCont = document.createElement("div");
+        textCont.setAttribute("class", "comment-details");
+        parent.append(textCont);
+
+        const creator = document.createElement("p");
+        creator.setAttribute("id", "user-cmnt-name");
+        creator.innerText = username;
+        textCont.append(creator);
+
+        const comment = document.createElement("p");
+        comment.setAttribute("id", "user-cmnt-text");
+        comment.innerText = result.text;
+        textCont.append(comment);
+
+        // Hide no comments text
+        const noComments = document.getElementById("no-cmnts-text");
+        if (noComments !== null) {
+            noComments.style.display = "none";
+        }
+
+    })
+    .catch(error => {
+        toast("Error. Reason stickied above.", error);
+    });
+
+}

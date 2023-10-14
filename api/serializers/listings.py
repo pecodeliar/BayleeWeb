@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from auctions.models import Auction, Bid, Comment
+from auctions.models import Auction, Bid, Comment, User
 
+class UserPKField(serializers.PrimaryKeyRelatedField):
+    def get_queryset(self):
+        queryset = User.objects.all()
+        return queryset
 
 class AuctionSerializer(serializers.ModelSerializer):
-    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    creator = UserPKField(read_only=True, default=serializers.CurrentUserDefault())
     starting_price = serializers.DecimalField(decimal_places=2, max_digits=12)
+    watchers = UserPKField(many=True, read_only=True)
     class Meta:
         model = Auction
         fields = [
@@ -30,7 +35,7 @@ class AuctionSerializer(serializers.ModelSerializer):
 
 class BidSerializer(serializers.ModelSerializer):
     auction = serializers.SerializerMethodField()
-    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    creator = UserPKField(read_only=True, default=serializers.CurrentUserDefault())
     class Meta:
         model = Bid
         fields = [
@@ -65,13 +70,17 @@ class BidSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    auction = serializers.SerializerMethodField()
+    creator = UserPKField(read_only=True, default=serializers.CurrentUserDefault())
     class Meta:
         model = Comment
         fields = [
             "id", 
             "creator",
             "auction",
-            "text"
-            "creation_date"
+            "text",
+            "timestamp"
         ]
+
+    def get_auction(self, obj):
+        return self.context.get("auction_id")
