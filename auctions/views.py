@@ -84,11 +84,15 @@ def index(request):
             theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
             return HttpResponseRedirect(reverse("auctions:index"))
     else:
+        listings = []
         items = sorted(Auction.objects.filter(active=True).all(), key=lambda x: random.random())
         for item in items:
-            print(item.image)
+            listing = {}
+            listing["details"] = item
+            listing["highest_bid"] = Bid.objects.filter(auction=item.id).order_by('-price').first()
+            listings.append(listing)
         return render(request, "auctions/index.html", {
-        "listings": list(items)
+        "listings": listings
     })
 
 def logout_view(request):
@@ -120,7 +124,7 @@ def visit_listing(request, listing_id):
     comment_count = comments.count()
 
     # Find if listings has bids
-    bids = Bid.objects.filter(auction=listing)
+    bids = Bid.objects.filter(auction=listing).order_by("-timestamp").all()
     bid_count = bids.count()
     if bid_count != 0:
         highest_bid = bids.order_by('-price').first()
@@ -130,7 +134,7 @@ def visit_listing(request, listing_id):
         user = User.objects.get(pk=request.user.pk)
 
         # Check if logged in user has highest bid
-        if bid_count != 0 and user == highest_bid.user:
+        if bid_count != 0 and user == highest_bid.creator:
             user_is_highest_bidder = True
 
 
@@ -146,33 +150,6 @@ def visit_listing(request, listing_id):
             listing.active = False
             listing.save()
             return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
-
-        # The User is trying to place a bid by pressing Place Bid button
-        if "place_bid_button" in request.POST.keys():
-            form = BidForm(request.POST)
-            if form.is_valid():
-
-                bid = form.cleaned_data['bid']
-
-                # Bid is lower than highest bid or price
-                if bid <= listing.price:
-                    return render(request, "auctions/listing.html", {
-                        "listing": listing,
-                        "bid_form": BidForm(),
-                        "bid_apology": True,
-                        "highest_bidder": user_is_highest_bidder,
-                        "comments": comments,
-                        "comment_count": comment_count,
-                        "comment_form": CommentForm()
-                    })
-                else:
-                    # https://docs.djangoproject.com/en/4.1/ref/models/instances/#updating-attributes-based-on-existing-fields
-                    listing.price = bid
-                    listing.save()
-
-                    new_bid = Bid(auction=listing, user=user, price=bid)
-                    new_bid.save()
-                    return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
 
         # The User is trying to ass a comment using the Add Comment button
         if "add_comment_button" in request.POST.keys():
@@ -192,6 +169,7 @@ def visit_listing(request, listing_id):
                     "bid_count": bid_count,
                     "bid_apology": False,
                     "highest_bidder": user_is_highest_bidder,
+                    "bid_history": bids,
                     "comments": comments,
                     "comment_count": comment_count,
                     "comment_form": CommentForm()

@@ -7,6 +7,7 @@ from rest_framework.decorators import action
 from rest_framework import status, permissions, viewsets
 from api.permissions import IsOwner
 from rest_framework import generics
+from rest_framework import mixins
 
 class IsOwnerPermission(permissions.BasePermission):
 
@@ -96,7 +97,10 @@ def watch(request, listing_id):
     return Response({"error": "GET or PATCH request required."}, status=status.HTTP_400_BAD_REQUEST)
     
 
-class BidView(generics.CreateAPIView):
+class BidViewSet(mixins.CreateModelMixin,
+                mixins.ListModelMixin,
+                mixins.RetrieveModelMixin,
+                viewsets.GenericViewSet):
     serializer_class = BidSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = Bid.objects.all()
@@ -113,29 +117,26 @@ class BidView(generics.CreateAPIView):
 
 
     def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
+        listing = Auction.objects.get(pk=self.kwargs['auction_id'])
+        serializer.save(auction=listing, creator=self.request.user)
 
 
     def get_queryset(self):
         """
-        This view should return a list of all the auctions
-        for the currently authenticated user.
+        This view should return a list of all the bid bistory
+        for a specific listing (auction).
         """
-        user = self.request.user
-        return Bid.objects.filter(creator=user)
+        listing = Auction.objects.get(pk=self.kwargs['auction_id'])
+        return Bid.objects.filter(auction=listing)
 
     @action(detail=True)
-    def auction_detail(self, request, pk):
+    def bid_detail(self, request, pk):
         """
-        This view should return details for an auction
-        for the currently authenticated user that created the activity.
+        This view should return details for a bid
+        for a particular auction.
         """
-        serializer = self.get_serializer(data=request.data)
         bid = self.get_object()
-        user = self.request.user
-        if self.request.method == "POST" and auction.creator != user:
-            return Response(serializer.errors, status=status.HTTP_405_NOT_ALLOWED)
-        return Response(AuctionSerializer(auction).data)
+        return Response(BidSerializer(bid).data)
     
 
 class CommentViewSet(viewsets.ModelViewSet):

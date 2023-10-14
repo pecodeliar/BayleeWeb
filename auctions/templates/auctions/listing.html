@@ -33,6 +33,7 @@
     </div>
 
     <div class="visit-new" id="yourmom">
+        <p class="alert alert-danger" role="alert" id="alert"></p>
         {% if listing.creator == request.user and listing.active == True %}
             <a class="edit-act float-right" href="{% url 'auctions:edit' listing.id %}"><i class='bx bxs-edit'></i></a>
         {% endif %}
@@ -52,7 +53,11 @@
         </div>
         <p class="card-text listing-description details-category">{{ listing.description }}</p>
         {% load humanize %}
-        <h3 class="card-text listing-price details-category">${{ listing.starting_price|intcomma }}</h3>
+        {% if bid_count == 0 %}
+        <h3 id="price-text" class="card-text listing-price details-category">${{ listing.starting_price|intcomma }}</h3>
+        {% else %}
+        <h3 class="card-text listing-price details-category">${{ bid_history.first.price|intcomma }}</h3> 
+        {% endif %}
         <p class="details-category">{{ bid_count }} bid(s) so far. {% if user.is_authenticated and highest_bidder == True %}Your bid is the current bid.{% endif %}</p>
         {% if bid_apology == True %}<p class="alert alert-danger" role="alert">Your bid needs to be higher than the current price.</p>{% endif %}
         <div class="details">
@@ -74,11 +79,11 @@
             <p class="details-created details-category">Created: {{ listing.creation_date }}, {{ listing.creation_time }}</p>
         </div>
         {% if user.is_authenticated %}
-        <form method="POST" class="bid">
+        <form method="POST" class="bid" onsubmit="event.preventDefault();">
             {% if request.user != listing.creator and listing.active == True %}
             {% csrf_token %}
             {{ bid_form }}
-            <input class="visit-list-btn" type="submit" name="place_bid_button" value="Place Bid">
+            <input id="bid-inp" class="visit-list-btn" type="submit" name="place_bid_button" value="Place Bid" onclick="placeBid('{{ listing.id }}')">
             {% elif request.user == listing.creator and listing.active == True %}
             {% csrf_token %}
             <input type="submit" class="visit-list-btn close-auct-btn" name="close_auction_button" value="Close Auction">

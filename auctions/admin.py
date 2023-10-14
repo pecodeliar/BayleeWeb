@@ -12,7 +12,7 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 class BidAdmin(admin.ModelAdmin):
-    list_display = ("auction", "creator", "price", "creation_date")
+    list_display = ("auction", "creator", "price", "timestamp")
 
 
 

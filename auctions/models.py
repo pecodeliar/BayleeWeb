@@ -48,7 +48,7 @@ class Bid(models.Model):
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="auction_bid")
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bid_creator")
     price = models.FloatField()
-    creation_date = models.DateField(default=django.utils.timezone.now())
+    timestamp = models.DateTimeField(auto_now=True)
 
 
 # One Auction can have many comments (O->M)

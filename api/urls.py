@@ -8,7 +8,8 @@ router = DefaultRouter()
 router.register(r"users", users.UserViewSet, basename="users_api")
 router.register(r"listings", listings.AuctionViewSet, basename="listings_api")
 # https://stackoverflow.com/questions/63439268/how-to-use-parameters-in-drf-router
-router.register(r"listings/(?P<listing_id>\d+)/comments", listings.CommentViewSet, basename="comments_api")
+router.register(r"listings/(?P<auction_id>\d+)/bids", listings.BidViewSet, basename="bids_api")
+router.register(r"listings/(?P<auction_id>\d+)/comments", listings.CommentViewSet, basename="comments_api")
 
 
 urlpatterns = [

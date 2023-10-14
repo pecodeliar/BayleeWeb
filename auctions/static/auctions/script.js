@@ -303,3 +303,44 @@ function editProfile(userId) {
     });
     
 }
+
+function placeBid(listingId) {
+
+    const price = document.getElementById("id_bid").value;
+
+    const csrftoken = getCookie('csrftoken');
+
+    fetch(`/api/listings/${listingId}/bids/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        mode: 'same-origin',
+        body: JSON.stringify({
+            price: parseFloat(price)
+        })
+    })
+    .then(response => {
+        if (response.ok) return response.json();
+        return response.json().then(response => {
+            if (response.price !== undefined) {
+                throw new Error(response.price);
+            } else if (response.error !== undefined) {
+                throw new Error(response.error);
+            }  else if (response.non_field_errors !== undefined) {
+                throw new Error(response.non_field_errors);
+            }
+        })
+    })
+    .then(() => {
+
+        window.location.href = `/listing/${listingId}`;
+
+    })
+    .catch(error => {
+        toast("Error. Reason stickied above.", error);
+    });
+
+}

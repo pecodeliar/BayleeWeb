@@ -68,6 +68,10 @@ hr {
     background-color: var(--accent);
 }
 
+#alert {
+    display: none;
+}
+
 /* --- Navigation Bar --- */
 
 .top-nav {
