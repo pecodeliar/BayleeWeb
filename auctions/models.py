@@ -8,7 +8,6 @@ class User(AbstractUser):
     pfp_credit = models.CharField(max_length=64, blank=True, null=True)
     banner = models.URLField(blank=True, null=True)
     banner_credit = models.CharField(max_length=64, blank=True, null=True)
-    dark_theme = models.BooleanField(default=False)
 
 
 # One User can have Many Auction Listings (O->M)

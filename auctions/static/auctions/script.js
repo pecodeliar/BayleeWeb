@@ -1,3 +1,26 @@
+// https://medium.com/hypersphere-codes/detecting-system-theme-in-javascript-css-react-f6b961916d48
+const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+const storageTheme = window.localStorage.getItem("theme");
+if ((storageTheme === "auto" && darkThemeMq.matches === true) || storageTheme === "dark") {
+    document.querySelector("body").classList.add("dark-theme");
+};
+
+function themeSwitch() {
+
+    const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+    var theme = window.localStorage.getItem("theme");
+    console.log(theme);
+    if ((theme === "auto" && darkThemeMq.matches === true) || theme === "dark") {
+        document.querySelector("body").classList.toggle("dark-theme");
+        window.localStorage.setItem("theme", "light");
+    } else if ((theme === "auto" && darkThemeMq.matches === false) || theme === "light") {
+        document.querySelector("body").classList.toggle("dark-theme");
+        window.localStorage.setItem("theme", "dark");
+    };
+
+}
+
+
 // Get the modal
 var modal = document.getElementById("myModal");
 

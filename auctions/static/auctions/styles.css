@@ -82,8 +82,8 @@ hr {
 }
 
 .nav-right-side {
-    float: right;
     margin-right: 20px;
+    display: flex;
 }
 
 .nav-item {
@@ -102,19 +102,36 @@ hr {
     border-radius: 5px;
 }
 
+#theme-btn {
+    background-color: transparent;
+    color: var(--on-background);
+    border: none; 
+    margin-right: 16px;
+}
+
+#theme-btn i {
+    color: var(--primary);
+}
+
+#theme-btn,
 .sign-in-button {
     outline: var(--secondary) solid 1px;
     border-radius: 30px;
-    padding: 10px 20px;
-    vertical-align: middle;
+    padding: 8px 16px;
+    /*vertical-align: middle;
     margin-top: 10px;
-    margin-right: 10px;
+    margin-right: 10px;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+#theme-btn i,
 .sign-in-button i {
     font-size: 22px;
     font-weight: 100;
     color: var(--primary);
+    margin-right: 4px;
 }
 
 .sign-in-button:hover {
@@ -314,7 +331,6 @@ hr {
 
 .act-list-img-cont {
     height: 200px;
-    min-width: 14rem;
     background-color: var(--visit-list-btn-hover);
     display: flex;
     justify-content: center;

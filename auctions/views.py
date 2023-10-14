@@ -78,28 +78,21 @@ class ManageAccountForm(forms.Form):
 
 def index(request):
 
-    if request.method == "POST":
-        # User is switch themes
-        if "theme_button" in request.POST.keys():
-            theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
-            return HttpResponseRedirect(reverse("auctions:index"))
-    else:
-        listings = []
-        items = sorted(Auction.objects.filter(active=True).all(), key=lambda x: random.random())
-        for item in items:
-            listing = {}
-            listing["details"] = item
-            listing["highest_bid"] = Bid.objects.filter(auction=item.id).order_by('-price').first()
-            listings.append(listing)
-        return render(request, "auctions/index.html", {
-        "listings": listings
-    })
+    listings = []
+    items = sorted(Auction.objects.filter(active=True).all(), key=lambda x: random.random())
+    for item in items:
+        listing = {}
+        listing["details"] = item
+        listing["highest_bid"] = Bid.objects.filter(auction=item.id).order_by('-price').first()
+        listings.append(listing)
+    return render(request, "auctions/index.html", {
+    "listings": listings
+})
+
 
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("auctions:index"))
-
-
 
 
 @login_required
@@ -139,10 +132,6 @@ def visit_listing(request, listing_id):
 
 
     if request.method == "POST":
-        # User is switch themes
-        if "theme_button" in request.POST.keys():
-            theme_switch(user, request.POST["theme_button"])
-            return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
 
         # The Closed button was pressed by creator
         if "close_auction_button" in request.POST.keys():
@@ -154,30 +143,24 @@ def visit_listing(request, listing_id):
     else:
         # GET method
         return render(request, "auctions/listing.html", {
-                    "listing": listing,
-                    "bid_form": BidForm(),
-                    "bid_count": bid_count,
-                    "bid_apology": False,
-                    "highest_bidder": user_is_highest_bidder,
-                    "bid_history": bids,
-                    "comments": comments,
-                    "comment_count": comment_count,
-                    "comment_form": CommentForm()
-                })
+            "listing": listing,
+            "bid_form": BidForm(),
+            "bid_count": bid_count,
+            "bid_apology": False,
+            "highest_bidder": user_is_highest_bidder,
+            "bid_history": bids,
+            "comments": comments,
+            "comment_count": comment_count,
+            "comment_form": CommentForm()
+        })
 
 
 @login_required
 def watchlist(request):
-    if request.method == "POST":
-        # User is switch themes
-        if "theme_button" in request.POST.keys():
-            theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
-            return HttpResponseRedirect(reverse("auctions:watchlist"))
-    else:
-        auctions = Auction.objects.filter(watchers=request.user.pk).all()
-        return render(request, "auctions/watchlist.html", {
-            "listings": auctions
-        })
+    auctions = Auction.objects.filter(watchers=request.user.pk).all()
+    return render(request, "auctions/watchlist.html", {
+        "listings": auctions
+    })
 
 
 @login_required
@@ -185,27 +168,20 @@ def manage(request):
 
     user = User.objects.get(pk=request.user.pk)
 
-    if request.method == "POST":
-        # User is switch themes
-        if "theme_button" in request.POST.keys():
-            theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
-            return HttpResponseRedirect(reverse("auctions:manage"))
-
-    else:
-        default_data = {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'username': user.username,
-            'email': user.email,
-            'profile_picture': user.profile_picture,
-            'pfp_credit': user.pfp_credit,
-            'banner': user.banner,
-            'banner_credit': user.banner_credit
-            }
-        # https://stackoverflow.com/questions/65833407/divide-django-form-fields-to-two-divs
-        return render(request, "auctions/manage.html", {
-                    "form_fields": list(ManageAccountForm(default_data))
-                })
+    default_data = {
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'username': user.username,
+        'email': user.email,
+        'profile_picture': user.profile_picture,
+        'pfp_credit': user.pfp_credit,
+        'banner': user.banner,
+        'banner_credit': user.banner_credit
+        }
+    # https://stackoverflow.com/questions/65833407/divide-django-form-fields-to-two-divs
+    return render(request, "auctions/manage.html", {
+        "form_fields": list(ManageAccountForm(default_data))
+    })
 
 
 def account(request, user_id):
@@ -217,17 +193,11 @@ def account(request, user_id):
     # Find if user has made any auctions
     auctions = Auction.objects.filter(creator_id=account)
 
-    if request.method == "POST":
-        # User is switch themes
-        if "theme_button" in request.POST.keys():
-            theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
-            return HttpResponseRedirect(reverse("auctions:profile", args=(account.id,)))
-    else:
-        return render(request, "auctions/profile.html", {
-                    "account": account,
-                    "comments": comments,
-                    "listings": auctions
-                })
+    return render(request, "auctions/profile.html", {
+        "account": account,
+        "comments": comments,
+        "listings": auctions
+    })
 
 
 @login_required
@@ -236,59 +206,30 @@ def edit(request, listing_id):
 
     # Check if there have been bids
     bid_count = Bid.objects.filter(auction=listing).count()
-
-    if request.method == "POST":
-
-        # User is switch themes
-        if "theme_button" in request.POST.keys():
-            theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
-            return HttpResponseRedirect(reverse("auctions:edit", args=(listing.id,)))
-    else:
-        # GET method
-        default_data = {
-            'title': listing.title,
-            'description': listing.description,
-            'price': listing.starting_price,
-            'image_link': listing.image,
-            }
-        # https://stackoverflow.com/questions/65833407/divide-django-form-fields-to-two-divs
-        return render(request, "auctions/edit.html", {
-                    "listing": listing,
-                    "form_fields": list(ListingForm(default_data)),
-                    "bid_count": bid_count
-                })
+        
+    # GET method
+    default_data = {
+        'title': listing.title,
+        'description': listing.description,
+        'price': listing.starting_price,
+        'image_link': listing.image,
+        }
+    # https://stackoverflow.com/questions/65833407/divide-django-form-fields-to-two-divs
+    return render(request, "auctions/edit.html", {
+        "listing": listing,
+        "form_fields": list(ListingForm(default_data)),
+        "bid_count": bid_count
+    })
 
 
 def categories(request):
-    if request.method == "POST":
-        # User is switch themes
-        if "theme_button" in request.POST.keys():
-            theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
-            return HttpResponseRedirect(reverse("auctions:categories"))
-    else:
-        return render(request, "auctions/categories.html", {
+    return render(request, "auctions/categories.html", {
         "categories": Category.objects.all()
     })
 
 
 def category(request, category_id):
-    if request.method == "POST":
-        # User is switch themes
-        if "theme_button" in request.POST.keys():
-            theme_switch(User.objects.get(pk=request.user.pk), request.POST["theme_button"])
-            return HttpResponseRedirect(reverse("auctions:index"))
-    else:
-        return render(request, "auctions/category.html", {
+    return render(request, "auctions/category.html", {
         "listings": Auction.objects.filter(category_id=category_id, active=True).all(),
         "category_name": Category.objects.get(pk=category_id).name
     })
-
-
-def theme_switch(user, switch_request):
-    option = switch_request
-    if option == "Switch to Dark Mode":
-        user.dark_theme = True
-        user.save()
-    elif option == "Switch to Light Mode":
-        user.dark_theme = False
-        user.save()

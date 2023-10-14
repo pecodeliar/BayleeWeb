@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{% block title %}Baylee{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'auctions/styles.css' %}?ver=1.2" rel="stylesheet">
@@ -10,11 +11,7 @@
         <script defer src="{% static 'auctions/script.js' %}"></script>
         <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     </head>
-    {% if user.dark_theme == True %}
-    <body class="dark-theme">
-    {% else %}
     <body>
-    {% endif %}
         <header>
             <nav>
                 <ul class="top-nav">
@@ -31,6 +28,10 @@
                     {% else %}
                     {% endif %}
                     <div class="nav-right-side header-pfp">
+                        <button id="theme-btn" onclick="themeSwitch()">
+                            <i class='bx bx-palette'></i>
+                            Switch Theme
+                        </button>
                         {% if user.is_authenticated %}
                         <li class="nav-item">
                             <div class="h-r-content header-pfp">
@@ -90,19 +91,6 @@
                     <a class="menu-link" href="/manage">
                         <i class='menu-link-icon bx bx-user'></i>Manage Account
                     </a>
-                </li>
-                <li class="modal-item">
-                    <form method="POST">
-                        {% if user.dark_theme == True %}
-                        {% csrf_token %}
-                        <i class="theme-icon bx bx-moon"></i>
-                        <input type="submit" class="modal-theme-btn btn-toggle" name="theme_button" value="Switch to Light Mode">
-                        {% else %}
-                        {% csrf_token %}
-                        <i class="theme-icon bx bx-sun"></i>
-                        <input type="submit" class="modal-theme-btn btn-toggle" name="theme_button" value="Switch to Dark Mode">
-                        {% endif %}
-                    </form>
                 </li>
                 <li class="modal-item">
                     <a class="menu-link" href="/logout">

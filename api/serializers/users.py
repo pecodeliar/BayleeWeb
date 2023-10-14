@@ -17,7 +17,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "pfp_credit",
             "banner",
             "banner_credit",
-            "dark_theme"
         ]
 
     extra_kwargs = {
