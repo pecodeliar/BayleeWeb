@@ -8,7 +8,7 @@
         <div class="row justify-content-center">
             {% for listing in listings %}
             <div class="col-xs-12">
-                <a href="/listing/{{ listing.id }}" class="act-list-link" style="width: 18rem;">
+                <a href="/listing/{{ listing.details.id }}" class="act-list-link" style="width: 18rem;">
                     <div class="card act-list-card border-0 card-item" style="width: 16rem;">
                         <div class="act-list-img-cont">
                             {% if listing.details.image  %}
