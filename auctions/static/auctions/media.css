@@ -1,0 +1,125 @@
+@media screen and (min-width: 1061px) {
+  
+}
+  
+@media screen and (max-width: 1060px) {
+  
+    /*body {
+      background: black;
+    }*/
+  
+}
+  
+@media screen and (max-width: 990px) {
+  
+    /*body {
+      background: grey;
+    }*/
+
+  }
+  
+@media screen and (max-width: 920px) {
+  
+    /*body {
+      background: purple;
+    }*/
+  
+}
+  
+@media screen and (max-width: 768px) {
+  
+    /*body {
+      background: pink;
+    }*/
+
+    .visit-container {
+        max-height: initial;
+        flex-direction: column;
+    }
+
+    .visit-new {
+        margin: 0;
+        margin-bottom: 25px;
+    }
+
+    .visit-img-cont {
+        width: 100%;
+        max-height: 400px;
+    }
+
+    #yourmom {
+        width: 100%;
+    }
+
+    .bid {
+        text-align: center;
+    }
+  
+}
+  
+@media screen and (max-width: 600px) {
+  
+    /*body {
+      background: blue;
+    }*/
+  
+    .visit-img-cont {
+        width: 100%;
+        max-height: 300px;
+    }
+
+    .comment-form-box {
+        max-width: 90%;
+    }
+
+    #add-cmnt-btn {
+        margin-right: 40px;
+    }
+
+    #no-cmnts-text {
+        margin-top: 16px;
+        margin-left: 16px;
+    }
+
+    .card-cont {
+        width: 100%;
+        padding: 8px 24px;
+    }
+    
+    .card {
+        flex-direction: initial;
+    }
+    
+    .act-list-card {
+        display: flex;
+    }
+    
+    .act-list-img-cont {
+        min-width: initial;
+        width: 50%;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 12px;
+    }
+    
+    .card-body {
+        width: 50%;
+    }
+
+    .act-list-title, 
+    .act-list-text {
+        width: 150px;
+    }
+    
+}
+  
+@media screen and (max-width: 480px) {
+  
+  /*body {
+    background-color: green;
+  }*/
+
+  #yourmom {
+    padding: 0 16px;
+  }
+  
+}

@@ -287,8 +287,8 @@ hr {
     width: 100%;
 }
 
-.card-item {
-    margin: 10px;
+.card-cont {
+    padding: 8px;
 }
 
 .act-list-link {
@@ -304,6 +304,7 @@ hr {
 .act-list-card {
     background-color: var(--variant);
     outline-style: none;
+    border-radius: 12px;
 }
 
 .act-list-card:hover {
@@ -313,13 +314,20 @@ hr {
 
 .act-list-img-cont {
     height: 200px;
-    background-color: tranparent;
+    min-width: 14rem;
+    background-color: var(--visit-list-btn-hover);
+    display: flex;
+    justify-content: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .act-list-img {
-    max-height: 100%;
-    max-width: 100%;
+    max-height: 200px;
+    max-width: 14rem;
     object-fit: contain;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .act-list-title {
@@ -328,6 +336,7 @@ hr {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    width: 180px;
 }
 
 .act-list-text {
@@ -335,6 +344,7 @@ hr {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    width: 180px;
 }
 
 /* https://css-tricks.com/accessible-font-sizing-explained/*/
@@ -353,6 +363,7 @@ hr {
 
 .visit-container {
     display: flex;
+    max-height: 550px;
 }
 
 .visit-new {
@@ -381,14 +392,22 @@ hr {
     display: flex;
     justify-content: center;
     text-align: center;
+    width: 50%;
 }
 
 .visit-listing-img {
     text-align: center;
     object-fit: contain;
-    max-height: 500px;
-    max-width: 500px;
+    width: 100%;
+    border: 1px solid var(--accent);
+    border-radius: 12px;
 }
+
+
+#yourmom {
+    width: 35%;
+}  
+  
 
 .listing-title {
     font-weight: bold;
@@ -410,6 +429,7 @@ hr {
     height: 30px;
     width: 30px;
     padding: 0;
+    object-fit: cover;
 }
 
 .details-creator {
@@ -729,7 +749,7 @@ hr {
 
 .acc-dis-details p {
     padding: 0;
-    margin 0;
+    margin: 0;
 }
 
 .acc-det-item {

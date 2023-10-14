@@ -7,9 +7,9 @@
         <br>
         <div class="row justify-content-center">
             {% for listing in listings %}
-            <div class="col-xs-12">
-                <a href="/listing/{{ listing.details.id }}" class="act-list-link" style="width: 18rem;">
-                    <div class="card act-list-card border-0 card-item" style="width: 16rem;">
+            <div class="card-cont">
+                <a href="/listing/{{ listing.details.id }}" class="act-list-link">
+                    <div class="card act-list-card border-0 card-item">
                         <div class="act-list-img-cont">
                             {% if listing.details.image  %}
                                 <img class="card-img-top act-list-img" src="{{ listing.details.image }}" alt="{{ listing.details.title }}">
@@ -26,7 +26,7 @@
                         <p class="card-text act-list-text"><b>Price:</b> ${{ listing.highest_bid.price|intcomma }}</p> 
                         {% endif %}
                         <p class="card-text act-list-text">{{ listing.details.description }}</p>
-                        <p class="card-text act-ist-create act-list-text">Created: {{ listing.details.creation_date }}, {{ listing.details.creation_time }}</p>
+                        <p class="card-text act-ist-create act-list-text">Created: {{ listing.details.creation_date }}</p>
                     </div>
                 </div>
             </a>

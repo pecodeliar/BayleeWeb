@@ -24,7 +24,8 @@ router = DefaultRouter()
 router.registry.extend(api_router.registry)
 
 urlpatterns = [
-    path(f"{os.environ['ADMIN_URL']}/", admin.site.urls),
+    #path(f"{os.environ['ADMIN_URL']}/", admin.site.urls),
+    path(f"admin/", admin.site.urls),
     path("", include("auctions.urls")),
     path("api/", include("api.urls")),
 ]
