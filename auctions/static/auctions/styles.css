@@ -554,7 +554,6 @@ hr {
 }
  .wl-link {
     width: 100%;
-    margin: 10px;
     color: var(--on-background);
  }
 
@@ -562,6 +561,10 @@ hr {
     background: var(--variant);
     color: var(--on-background);
  }
+
+ .wl-item-cont .wl-card-cont {
+    margin: 8px 0;
+}
 
  .wl-link:hover {
     color: var(--visit-list-btn-hover);
@@ -774,6 +777,7 @@ hr {
 
 .acc-dis-details {
     color: var(--primary);
+    margin-left: 24px;
 }
 
 .acc-dis-details p {
@@ -801,11 +805,16 @@ hr {
     margin-bottom: 30px;
 }
 
+.acct-card-cont {
+    margin: 16px 0;
+}
+
 .acct-card {
     height: 70px;
     width: 100%;
     margin: 0;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     border-radius: 10px;
     background: var(--secondary-container);
 
@@ -822,16 +831,33 @@ hr {
 
 .acct-card-img-cont {
     display: inline-block;
-    height: 50px;
-    width: 25%;
+    height: 100%;
+    width: 35%;
     text-align: center;
+    background-color: var(--visit-list-btn-hover);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 .acct-card-img {
-    height: 100%
+    height: 100%;
+    width: 90%;
+    object-fit: contain;
 }
 
 .acct-card-details {
     display: inline-block;
-    vertical-align:middle;
+    vertical-align: middle;
+    margin-left: 16px;
+    width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.acct-list-t {
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

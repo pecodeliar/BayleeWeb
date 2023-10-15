@@ -54,6 +54,28 @@
     .bid {
         text-align: center;
     }
+
+    .banner-row {
+        height: 150px;
+    }
+
+    #banner {
+       top: 0; 
+    }
+
+    #acc-pfp-cont {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .acc-dis-details {
+        margin-left: 0;
+    }
+
+    #acc-unm {
+        margin-top: 0;
+    }
   
 }
   
@@ -115,6 +137,10 @@
         flex-direction: initial;
     }
 
+    .prof-cont .visit-child {
+        margin: 0;
+    }
+
     .act-list-link {
     }
     
@@ -143,6 +169,30 @@
     .user-modal {
         width: 290px;
     }
+
+    .acct-card {
+        margin-right: -16px;
+    }
+
+    .acct-card-cont {
+        margin: 16px 0;
+    }
+
+    .acct-card-cont .wl-link {
+        margin: 0;
+    }
+
+    .wl-item-cont .wl-card-cont {
+        width: 85%;
+    }
+
+    .wl-card-img-cont {
+        width: 35%;
+    }
+
+    .wl-card-img {
+        object-fit: contain;
+    }
     
 }
   
@@ -153,6 +203,10 @@
   }*/
 
   #yourmom {
+    padding: 0 16px;
+  }
+
+  .acc-dis-details {
     padding: 0 16px;
   }
   

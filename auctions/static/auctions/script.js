@@ -9,11 +9,15 @@ function themeSwitch() {
 
     const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
     var theme = window.localStorage.getItem("theme");
-    console.log(theme);
+    //console.log(theme);
     if ((theme === "auto" && darkThemeMq.matches === true) || theme === "dark") {
         document.querySelector("body").classList.toggle("dark-theme");
         window.localStorage.setItem("theme", "light");
     } else if ((theme === "auto" && darkThemeMq.matches === false) || theme === "light") {
+        document.querySelector("body").classList.toggle("dark-theme");
+        window.localStorage.setItem("theme", "dark");
+    } else if (theme === null) {
+        // For Mobile Devies
         document.querySelector("body").classList.toggle("dark-theme");
         window.localStorage.setItem("theme", "dark");
     };

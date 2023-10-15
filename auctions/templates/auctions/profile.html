@@ -11,11 +11,13 @@
 </div>
 <div class="container">
     <div class="acc-dis-cont visit-container justify-content-center">
-        {% if account.profile_picture %}
-        <img src="{{ account.profile_picture }}" alt="Profile Picture" id="acc-pfp">
-        {% else %}
-        <img id="acc-pfp" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
-        {% endif %}
+        <div id="acc-pfp-cont">
+            {% if account.profile_picture %}
+            <img src="{{ account.profile_picture }}" alt="Profile Picture" id="acc-pfp">
+            {% else %}
+            <img id="acc-pfp" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="No Profile Picture">
+            {% endif %}
+        </div>
         <div class="acc-dis-details">
             <p class="visit-child acc-det-item" id="acc-un"><strong>{{ account.first_name }} {{ account.last_name }}</strong></p>
             <p class="visit-child acc-det-item" id="acc-em">@{{ account.username }}</p>
@@ -28,7 +30,7 @@
         </div>
     </div>
     <hr>
-    <div class="visit-container">
+    <div class="visit-container prof-cont">
         <div class="justify-content-center visit-child">
             <div>
                 <h4 class="acct-title">{{ comments.count }} Comment(s)</h4>
@@ -62,7 +64,7 @@
                                 <img class="acct-card-img" src="https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg" alt="No Image Found">
                             {% endif %}
                         </div>
-                        <div class="card-body acct-card-details">
+                        <div class="acct-card-details">
                             <h5 class="acct-list-t">{{ listing.title }}</h5>
                         </div>
                     </div>
