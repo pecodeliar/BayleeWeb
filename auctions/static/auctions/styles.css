@@ -21,6 +21,11 @@
     --on-error: white;
     --variant: #f0e0d0;
     --on-variant: #4f4539;
+
+     /* https://codepen.io/sdthornton/pen/wBZdXq */
+     --shad-01: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+     --shad-03: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+
 }
 
 /* ===== Colors for Dark Mode ===== */
@@ -44,6 +49,10 @@ body.dark-theme {
     --on-error: #690005;
     --variant: #4f4539;
     --on-variant: #d3c4b4;
+
+    /* https://codepen.io/sdthornton/pen/wBZdXq */
+    --shad-01: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    --shad-03: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
 body {
@@ -51,7 +60,6 @@ body {
 }
 
 h1 {
-    margin-top: 5px;
     margin-left: 10px;
     margin-right: 20px;
     color: var(--on-background);
@@ -75,10 +83,11 @@ hr {
 /* --- Navigation Bar --- */
 
 .top-nav {
-    background-color: var(--background);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     overflow: hidden;
     padding: 2px;
-    padding-top: 10px;
 }
 
 .nav-right-side {
@@ -87,7 +96,6 @@ hr {
 }
 
 .nav-item {
-    float: left;
     list-style: none;
     color: var(--on-background);
 }
@@ -100,6 +108,16 @@ hr {
     text-decoration: none;
     font-size: 17px;
     border-radius: 5px;
+}
+
+#logo-home a {
+    display: flex;
+    align-items: center;
+}
+
+.bx-store {
+    color: var(--primary);
+    font-size: 2rem;
 }
 
 #theme-btn {
@@ -138,18 +156,12 @@ hr {
     box-shadow: 0px 1px 3px grey;
 }
 
-.nav-link:hover {
-    background-color: var(--primary-container);
-    color: var(--on-primary-container);
-}
-
 .pfp {
     border: none;
     border-radius: 50%;
     overflow: hidden;
     height: 45px;
     width: 45px;
-    margin-top: 4px;
     padding: 0;
     cursor: pointer;
 }
@@ -170,7 +182,8 @@ hr {
     z-index: 10;
     background-color: var(--accent-container);
     width: 350px;
-    box-shadow: 0px 0px 5px var(--on-accent-container);
+    /*box-shadow: 0px 0px 5px var(--on-accent-container);*/
+    box-shadow: var(--shad-03);
     overflow: auto;
     padding-bottom: 10px;
 }
@@ -283,7 +296,7 @@ hr {
 }
 
 #mcb {
-    color: black;
+    color: var(--on-accent-container);
 }
 
 .close:hover,

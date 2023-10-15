@@ -15,22 +15,24 @@
         <header>
             <nav>
                 <ul class="top-nav">
-                    <li class="nav-item">
-                        <h1>Auctions</h1>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Active Listings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Categories</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    {% else %}
-                    {% endif %}
+                    <div class="nav-left-side header-pfp">
+                        <li class="nav-item" id="logo-home">
+                            <a class="nav-link" href="/">
+                                <i class='bx bx-store'></i>
+                            <h1>Baylee</h1>
+                            </a>
+                        </li>
+                        <!--<li class="nav-item">
+                            <a class="nav-link" href="#">Categories</a>
+                        </li>-->
+                        {% if user.is_authenticated %}
+                        {% else %}
+                        {% endif %}
+                    </div>
                     <div class="nav-right-side header-pfp">
                         <button id="theme-btn" onclick="themeSwitch()">
                             <i class='bx bx-palette'></i>
-                            Switch Theme
+                            <span>Switch Theme</span>
                         </button>
                         {% if user.is_authenticated %}
                         <li class="nav-item">

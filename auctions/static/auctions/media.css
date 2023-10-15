@@ -59,9 +59,33 @@
   
 @media screen and (max-width: 600px) {
   
-    /*body {
+    body {
       background: blue;
-    }*/
+    }
+
+    h1 {
+        margin-left: 4px;
+        margin-right: 8px;
+        font-size: 1.5rem;
+    }
+
+    .bx-store {
+        color: var(--primary);
+        font-size: 1.5rem;
+    }
+
+    #theme-btn span {
+        display: none;
+    }
+
+    #theme-btn {
+        border-radius: 35px;
+        padding: 8px 10px;
+    }
+
+    #theme-btn i {
+        margin-right: 0;
+    }
   
     .visit-img-cont {
         width: 100%;
@@ -109,14 +133,18 @@
     .act-list-text {
         width: 150px;
     }
+
+    .user-modal {
+        width: 290px;
+    }
     
 }
   
 @media screen and (max-width: 480px) {
   
-  /*body {
+  body {
     background-color: green;
-  }*/
+  }
 
   #yourmom {
     padding: 0 16px;
