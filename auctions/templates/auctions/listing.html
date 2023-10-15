@@ -54,9 +54,9 @@
         <p class="card-text listing-description details-category">{{ listing.description }}</p>
         {% load humanize %}
         {% if bid_count == 0 %}
-        <h3 id="price-text" class="card-text listing-price details-category">${{ listing.starting_price|intcomma }}</h3>
+        <h3 id="price-text" class="card-text listing-price details-category">${{ listing.starting_price|floatformat:2|intcomma }}</h3>
         {% else %}
-        <h3 class="card-text listing-price details-category">${{ bid_history.first.price|intcomma }}</h3> 
+        <h3 class="card-text listing-price details-category">${{ bid_history.first.price|floatformat:2|intcomma }}</h3> 
         {% endif %}
         <p class="details-category">{{ bid_count }} bid(s) so far. {% if user.is_authenticated and highest_bidder == True %}Your bid is the current bid.{% endif %}</p>
         {% if bid_apology == True %}<p class="alert alert-danger" role="alert">Your bid needs to be higher than the current price.</p>{% endif %}

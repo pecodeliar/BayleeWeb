@@ -21,9 +21,9 @@
                         <h5 class="card-title act-list-title">{{ listing.details.title }}</h5>
                         {% load humanize %}
                         {% if listing.highest_bid.price is None %}
-                        <p class="card-text act-list-text"><b>Price:</b> ${{ listing.details.starting_price|intcomma }}</p>
+                        <p class="card-text act-list-text"><b>Price:</b> ${{ listing.details.starting_price|floatformat:2|intcomma }}</p>
                         {% else %}
-                        <p class="card-text act-list-text"><b>Price:</b> ${{ listing.highest_bid.price|intcomma }}</p> 
+                        <p class="card-text act-list-text"><b>Price:</b> ${{ listing.highest_bid.price|floatformat:2|intcomma }}</p> 
                         {% endif %}
                         <p class="card-text act-list-text">{{ listing.details.description }}</p>
                         <p class="card-text act-ist-create act-list-text">Created: {{ listing.details.creation_date }}</p>

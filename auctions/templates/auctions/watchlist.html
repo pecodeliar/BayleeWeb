@@ -20,7 +20,7 @@
                         <div class="card-body wl-card-details">
                             <h5 class="card-title wl-card-text">{{ listing.title }}</h5>
                             {% load humanize %}
-                            <p class="card-text wl-card-text"><b>Current Price:</b> ${{ listing.starting_price|intcomma }}</p>
+                            <p class="card-text wl-card-text"><b>Current Price:</b> ${{ listing.starting_price|floatformat:2|intcomma }}</p>
                         </div>
                     </div>
                 </a>
